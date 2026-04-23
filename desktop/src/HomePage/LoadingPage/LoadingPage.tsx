@@ -1,0 +1,173 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
+export const LoadingPage = () => {
+    const { t } = useTranslation();
+    const [javaRunning, setJavaRunning] = useState(false);
+    const [sqliteRunning, setSqliteRunning] = useState(false);
+    const [pythonRunning, setPythonRunning] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const backend = async() => {
+            const response = await axios.get('http://localhost:8080/test');
+            console.log(response.data)
+            if(response.data === "yes"){
+                setJavaRunning(true);
+            }
+        }
+        backend();      
+    }, []);
+
+    useEffect(() => {
+        const sqlite = async() => {
+            const response = await axios.get('http://localhost:8080/sqlite');
+            console.log(response.data)
+            if(response.data === true){
+                setSqliteRunning(true);
+            }
+        }
+        sqlite();
+    }, []);
+
+    useEffect(() => {
+        const python = async() => {
+            const response = await axios.get('http://localhost:8000/test');
+            if(response.data == 'yes'){
+                setPythonRunning(true);
+            }
+        }
+        python();
+    }, []); 
+
+    useEffect(() => {
+        const reloadInterval = setInterval(() => {
+            window.location.reload();
+        }, 8000);
+
+        return () => clearInterval(reloadInterval);
+    }, []);
+
+    const StatusItem = ({ title, status, description }: { title: string; status: boolean; description?: string }) => (
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-4 p-4 bg-[var(--bg-card)]/40 backdrop-blur-sm rounded-xl border border-[var(--border-color)]"
+        >
+            <div className="flex-shrink-0">
+                {status ? (
+                    <CheckCircle2 className="w-6 h-6 text-[var(--accent)]" />
+                ) : (
+                    <Loader2 className="w-6 h-6 text-[var(--text-main)] animate-spin" />
+                )}
+            </div>
+            <div className="flex-1">
+                <h3 className="text-lg font-medium text-[var(--text-main)]">{title}</h3>
+                {description && (
+                    <p className="text-sm text-[var(--text-muted)] mt-1">{description}</p>
+                )}
+            </div>
+        </motion.div>
+    );
+
+    return (
+        <div className="min-h-screen w-full bg-[var(--bg-app)] flex flex-col items-center justify-center p-4">
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="max-w-2xl w-full space-y-6"
+            >
+                {/* Header */}
+                <div className="text-center mb-8">
+                    <motion.h1 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-3xl md:text-4xl font-serif text-[var(--text-main)] mb-3"
+                    >
+                        {t('loading.title')}
+                    </motion.h1>
+                    <motion.p 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="text-[var(--text-muted)] mb-2"
+                    >
+                        {t('loading.subtitle')}
+                    </motion.p>
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                        className="text-sm text-[#2F4F4F]/60"
+                    >
+                        {t('loading.refreshHint')}
+                    </motion.div>
+                </div>
+
+                {/* Status Items */}
+                <div className="space-y-4">
+                    <StatusItem 
+                        title={t('loading.javaBackend')} 
+                        status={javaRunning}
+                    />
+                    <StatusItem 
+                        title={t('loading.sqliteDatabase')} 
+                        status={sqliteRunning}
+                    />
+                    <StatusItem 
+                        title={t('loading.pythonService')} 
+                        status={pythonRunning}
+                        description={t('loading.pythonLoadingHint')}
+                    />
+                </div>
+
+                {/* Continue Button */}
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="flex justify-center mt-8"
+                >
+                    <button 
+                        onClick={() => navigate('/app')}
+                        className="group flex items-center gap-3 px-8 py-4 
+                                 bg-[#2F4F4F] text-white rounded-xl 
+                                 shadow-md hover:shadow-xl
+                                 transition-all duration-300 ease-out
+                                 hover:bg-[#1F3F3F] relative
+                                 border border-white/5"
+                    >
+                        <div className="absolute inset-0 rounded-xl bg-white/5 
+                                      opacity-0 group-hover:opacity-100 
+                                      transition-opacity duration-300 cursor-pointer" />
+                        <span className="relative text-lg font-medium tracking-wide cursor-pointer">
+                            {t('loading.continue')}
+                        </span>
+                    </button>
+                </motion.div>
+
+                {/* Note about Python */}
+                {!pythonRunning && (
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="flex items-center gap-2 text-sm text-[#2F4F4F]/70 mt-4 p-3 bg-[#2F4F4F]/5 rounded-lg"
+                    >
+                        <AlertCircle className="w-4 h-4" />
+                        <p>
+                            {t('loading.pythonNote')}
+                        </p>
+                    </motion.div>
+                )}
+
+                <div className="text-sm text-gray-500 mt-4">
+                    {t('loading.pythonNoteShort')}
+                </div>
+            </motion.div>
+        </div>
+    );
+};

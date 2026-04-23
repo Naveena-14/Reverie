@@ -1,0 +1,155 @@
+import BeginJournalingImage from "../../../assets/BeginJournalingPen.png";
+import ZeroCloudImage from "../../../assets/FeatureCardIcons/CloudIcon.png";
+import { Github } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+
+const DhammaWheel = () => (
+    <svg 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        className="relative w-7 h-7 transform 
+                   group-hover:rotate-180 transition-transform duration-1000
+                   group-hover:text-[var(--text-main)] text-[var(--text-main)]"
+        stroke="currentColor"
+        strokeWidth="1.5"
+    >
+        {/* Outer rim */}
+        <circle cx="12" cy="12" r="10" />
+        <circle cx="12" cy="12" r="8" />
+        
+        {/* Eight spokes */}
+        <line x1="12" y1="2" x2="12" y2="22" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+        <line x1="19.07" y1="4.93" x2="4.93" y2="19.07" />
+        
+        {/* Hub */}
+        <circle cx="12" cy="12" r="2" fill="currentColor" />
+    </svg>
+);
+
+const VersionCard = () => {
+    const { t } = useTranslation();
+    return (
+    <div className="flex flex-col items-center justify-center w-[200px] h-[200px] bg-[var(--bg-card)] rounded-xl p-4 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="flex flex-col items-center text-center">
+            <div className="text-2xl font-serif text-[var(--text-main)] mb-2">{t('beginJournaling.version')}</div>
+            <div className="text-sm text-[var(--text-muted)] italic mb-6">{t('beginJournaling.initialRelease')}</div>
+            <a 
+                href="https://github.com/BarsatKhadka/Vinaya-Journal/issues"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-5 py-2.5 
+                         text-[var(--text-main)] hover:text-[var(--text-main)]
+                         rounded-lg border border-[var(--border-color)]
+                         hover:border-[var(--border-color)] hover:bg-[var(--bg-card)]
+                         transition-all duration-300 shadow-sm hover:shadow-md
+                         bg-[var(--bg-card)] backdrop-blur-sm"
+            >
+                <Github className="w-4 h-4" />
+                <span className="text-sm font-medium tracking-wide">{t('beginJournaling.reportIssues')}</span>
+            </a>
+        </div>
+    </div>
+    );
+};
+
+export const BeginJournaling = () => {
+    const { t } = useTranslation();
+    return (
+        <div className="bg-[var(--bg-card)] backdrop-blur-[2px] rounded-xl border border-[var(--border-color)] shadow-sm">
+            <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+                {/* Top Section with Zero Cloud and Open Source */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                    <div className="flex items-center gap-2 px-3 py-1.5 
+                                  text-[var(--text-muted)] hover:text-[var(--text-main)]
+                                  rounded-lg border border-[var(--border-color)]
+                                  hover:border-[var(--border-color)] hover:bg-[var(--bg-card)]
+                                  transition-all duration-200 w-full sm:w-auto">
+                        <img
+                            src={ZeroCloudImage}
+                            alt="Zero cloud dependency"
+                            className="w-4 h-4"
+                            style={{ filter: 'var(--image-filter)' }}
+                        />
+                        <span className="text-xs tracking-wide" 
+                              style={{ fontFamily: '"Fira Sans", sans-serif' }}>
+                            {t('beginJournaling.zeroCloud')}
+                        </span>
+                    </div>
+                    <a href="https://github.com/BarsatKhadka/Vinaya-Journal"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       className="flex items-center gap-2 px-3 py-1.5 
+                                text-[var(--text-muted)] hover:text-[var(--text-main)]
+                                rounded-lg border border-[var(--border-color)]
+                                hover:border-[var(--border-color)] hover:bg-[var(--bg-card)]
+                                transition-all duration-200 w-full sm:w-auto">
+                        <Github className="w-4 h-4" />
+                        <span className="text-xs tracking-wide"
+                              style={{ fontFamily: '"Fira Sans", sans-serif' }}>
+                            {t('beginJournaling.openSource')}
+                        </span>
+                    </a>
+                </div>
+
+                {/* Main Content Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-0 items-center md:items-start">
+                    {/* Left Content - Version and Encryption */}
+                    <div className="md:col-span-4 md:pr-4 flex justify-center md:justify-start">
+                        <VersionCard />
+                    </div>
+
+                    {/* Center Image */}
+                    <div className="md:col-span-3 flex justify-center md:justify-end items-center">
+                        <div className="transform hover:scale-105 transition-transform duration-300">
+                            <img
+                                src={BeginJournalingImage}
+                                alt="Begin journaling illustration"
+                                className="w-[120px] h-[120px] md:w-[150px] md:h-[150px] object-contain drop-shadow-md"
+                                style={{ filter: 'var(--image-filter)' }}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Right Content - Begin Journey */}
+                    <div className="md:col-span-5 md:pl-4 flex flex-col items-center md:items-start mt-8">
+                        <div className="space-y-2 text-center md:text-left">
+                            <div className="space-y-1">
+                                <h4 className="text-2xl md:text-3xl font-serif text-[var(--text-main)] leading-tight">
+                                    {t('beginJournaling.beginJourney')}
+                                    <span className="text-[var(--text-main)]">{t('beginJournaling.vinaya')}</span>
+                                </h4>
+                                <p className="text-xs text-[var(--text-muted)] italic mb-3" 
+                                   style={{ fontFamily: '"Fira Sans", sans-serif' }}>
+                                    {t('beginJournaling.quote')}
+                                </p>
+                            </div>
+
+                            <Link to="/loading" 
+                                  className="group flex items-center justify-center gap-3 px-7 py-3.5 
+                                           bg-[var(--bg-card)] text-[var(--text-main)] rounded-xl 
+                                           shadow-md hover:shadow-xl
+                                           transition-all duration-300 ease-out cursor-pointer
+                                           hover:bg-[var(--bg-card)] relative
+                                           border border-[var(--border-color)] w-full max-w-[300px]"
+                                  style={{ fontFamily: '"Fira Sans", sans-serif' }}>
+                                <div className="absolute inset-0 rounded-xl bg-[var(--text-main)]/5 
+                                              opacity-0 group-hover:opacity-100 
+                                              transition-opacity duration-300" />
+                                <DhammaWheel />
+                                <span className="relative text-[15px] font-medium tracking-wider 
+                                               text-[var(--text-main)] group-hover:text-[var(--text-main)]" 
+                                      style={{ fontFamily: '"PlayFair Display", sans-serif' }}>
+                                    {t('beginJournaling.startWriting')}
+                                </span>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
